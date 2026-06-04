@@ -1,86 +1,87 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize AOS
     AOS.init({
-        once: true
+        once: true,
+        duration: 1000,
+        offset: 100
     });
-
     const header = document.getElementById('main-header');
     const hamburger = document.getElementById('hamburger');
     const closeMenu = document.getElementById('closeMenu');
     const navLinksContainer = document.getElementById('navLinks');
     const navLinks = document.querySelectorAll('.nav-item');
+    const body = document.body;
+    if(hamburger) {
+        hamburger.addEventListener('click', () => {
+            navLinksContainer.classList.add('active');
+            body.style.overflow = 'hidden'; 
+        });
+    }
+    const closeMobileMenu = () => {
+        navLinksContainer.classList.remove('active');
+        body.style.overflow = 'auto'; 
+    };
 
-    // Scroll Effect for Header
+    if(closeMenu) {
+        closeMenu.addEventListener('click', closeMobileMenu);
+    }
+    navLinks.forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+    });
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
         }
-        
-        // Active Link on Scroll
-        changeActiveLink();
+                changeActiveLink();
     });
 
-    // Mobile Menu Toggle
-    hamburger.addEventListener('click', () => {
-        navLinksContainer.classList.add('active');
-    });
-
-    closeMenu.addEventListener('click', () => {
-        navLinksContainer.classList.remove('active');
-    });
-
-    // Close menu when clicking a link
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            navLinksContainer.classList.remove('active');
-        });
-    });
-
-    // Function to highlight active section
     function changeActiveLink() {
-        let fromTop = window.scrollY + 100;
+        let fromTop = window.scrollY + 150; 
 
         navLinks.forEach(link => {
-            let section = document.querySelector(link.getAttribute('href'));
-            
-            if (section) {
-                if (
-                    section.offsetTop <= fromTop &&
-                    section.offsetTop + section.offsetHeight > fromTop
-                ) {
-                    navLinks.forEach(item => item.classList.remove('active'));
-                    link.classList.add('active');
+            const sectionId = link.getAttribute('href');
+            if (sectionId.startsWith('#') && sectionId.length > 1) {
+                const section = document.querySelector(sectionId);
+                
+                if (section) {
+                    if (
+                        section.offsetTop <= fromTop &&
+                        section.offsetTop + section.offsetHeight > fromTop
+                    ) {
+                        navLinks.forEach(item => item.classList.remove('active'));
+                        link.classList.add('active');
+                    }
                 }
             }
         });
     }
-});
-// تفعيل سلايدر معرض الأعمال
-var swiper = new Swiper(".mySwiper", {
-    effect: "coverflow", // تأثير الـ 3D
-    grabCursor: true,
-    centeredSlides: true,
-    slidesPerView: "auto",
-    loop: true, // جعل السلايدر يدور بشكل لا نهائي
-    autoplay: {
-        delay: 2500, // سرعة التقليب التلقائي
-        disableOnInteraction: false,
-    },
-    coverflowEffect: {
-        rotate: 30, // زاوية دوران الصور
-        stretch: 0,
-        depth: 100, // العمق بين الصور
-        modifier: 1,
-        slideShadows: true, // تفعيل الظلال للعمق
-    },
-    pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-    },
-    navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-    },
+    if (document.querySelector('.mySwiper')) {
+        var swiper = new Swiper(".mySwiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            loop: true,
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+            },
+            coverflowEffect: {
+                rotate: 30,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+    }
 });
